@@ -4,6 +4,7 @@
     {
         Node? head;
         int count = 0;
+        Node? last;
 
         class Node
         {
@@ -39,10 +40,6 @@
             private void setThirdN(int n)
             {
                 this.thirdN = n;
-            }
-            private Node? getRelativeNode(int relN)
-            {
-                return null;
             }
             public T Get()
             {

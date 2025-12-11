@@ -1,9 +1,12 @@
-﻿namespace Polymorphism
+﻿using static System.Net.Mime.MediaTypeNames;
+
+namespace Polymorphism
 {
     public class UList<T>
     {
         Node? head;
         int count = 0;
+        Node? last;
 
         class Node
         {
@@ -40,10 +43,6 @@
             {
                 this.thirdN = n;
             }
-            private Node? getRelativeNode(int relN)
-            {
-                return null;
-            }
             public T Get()
             {
                 return value;
@@ -52,7 +51,16 @@
             {
                 this.next = n;
             }
-
+        }
+        public void Add(T val)
+        {
+            Node n = new Node(val, count, head);
+            if (last != null)
+            {
+                last.SetNext(n);
+            }
+            
+            last = n;
         }
     }
     internal class Program

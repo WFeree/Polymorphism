@@ -1,6 +1,4 @@
-﻿using static System.Net.Mime.MediaTypeNames;
-
-namespace Polymorphism
+﻿namespace Polymorphism
 {
     public class UList<T>
     {
@@ -11,77 +9,86 @@ namespace Polymorphism
         class Node
         {
             T value;
-            Node? next;
-            Node? third;
-            int thirdN;
+            public Node? jumper;
+            public int jumpIndex;
+            public Node? next;
 
-            public Node(T val, int count, Node? head)
-            {
-                this.value = val;
-                int n = (int)(count / 3);
-                UpdateThirds(head, n, count);
-            }
+            public Node(T val)  {value = val;}
 
-            private void UpdateThirds(Node? head, int relN, int count)
+            public static void UpdateJumpers(Node head, int count)
             {
-                if (head == null) return;
-                Node? current = head;
-                for (int i = 0; i < count && current != null; i++)
+                const float ratio = 0.2f;
+                if(head == null) return;
+                Node current = head;
+                int index = 0;
+                while(current.next != null)
                 {
-                    Node? n = current.next;
-                    for (int j = 0; j < relN; j++)
+                    int remaining = count - index;
+                    int jumpLength = (int)(remaining * ratio);
+                    if(jumpLength < count*ratio*ratio)
                     {
-                        if (n == null) break;
-                        n = n.next;
+                        current.jumper = null;
+                        current.jumpIndex = -1;
+                        current = current.next;
+                        index++;
+                        continue;
                     }
-                    current.third = n;
-                    current.setThirdN(i + relN);
+
+                    Node? jumpTarget = current.next;
+                    for(int j = 0; j < jumpLength; j++)
+                    {
+                        if(jumpTarget == null) break;
+                        jumpTarget = jumpTarget.next;
+                    }
+                    current.jumper = jumpTarget;
+                    current.jumpIndex = index + jumpLength;
+
                     current = current.next;
+                    index++;
                 }
             }
-            private void setThirdN(int n)
-            {
-                this.thirdN = n;
-            }
-            public T Get()
-            {
-                return value;
-            }
-            public void SetNext(Node? n)
-            {
-                this.next = n;
-            }
-            public int getThirdN() {  return thirdN; }
-            public Node? getThird() {  return third; }
-            public T GetValue() { return value; }
+            public T GetValue() {  return value; }
         }
         public void Add(T val)
         {
-            Node n = new Node(val, count, head);
-            if (last != null)
+            count++;
+            Node newItem = new Node(val);
+            if(head == null)
             {
-                last.SetNext(n);
+                head = newItem;
             }
-            last = n;
+            if(last == null)
+            {
+                last = newItem;
+                last.next = null;
+            }
+            else
+            {
+                last.next = newItem;
+                last = newItem;
+            }
+            Node.UpdateJumpers(head, count);
         }
         public T Get(int i)
         {
-
-            if(i >= count || count<0 || head == null ) 
+            if(i >= count || i < 0)
             {
-                throw new IndexOutOfRangeException("");
+                throw new IndexOutOfRangeException();
             }
             Node current = head;
-            for(int _i = 0 ; _i < count; i++)
+            for(int index = 0; index != i; index++)
             {
-                if(current.getThird() != null && current.getThirdN() <= i)
+                Console.WriteLine(index + " " + i);
+                if(current.jumper != null && current.jumpIndex < i)
                 {
-                    _i = current.getThirdN();
-                    current = current.getThird();
+                    index = current.jumpIndex;
+                    current = current.jumper!;
+                    continue;
                 }
-                if (_i == i) return current.GetValue();
+                if(current != null)
+                    current = current.next;
             }
-            throw new IndexOutOfRangeException();
+            return current.GetValue();
         }
     }
     internal class Program
@@ -89,13 +96,13 @@ namespace Polymorphism
 
         static void Main(string[] args)
         {
-            int[] arr = { 1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,30};
             UList<int> list = new UList<int>();
-            for(int i =0; i < arr.Length; i++)
+            for(int i =0; i < 6000; i++)
             {
-                list.Add(arr[i]);
+                list.Add(i);
             }
-            Console.WriteLine(list.Get(5));
+            Console.WriteLine(list.Get(5200));
+            
         }
     }
 }

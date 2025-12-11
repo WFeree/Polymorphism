@@ -51,6 +51,9 @@ namespace Polymorphism
             {
                 this.next = n;
             }
+            public int getThirdN() {  return thirdN; }
+            public Node? getThird() {  return third; }
+            public T GetValue() { return value; }
         }
         public void Add(T val)
         {
@@ -59,8 +62,26 @@ namespace Polymorphism
             {
                 last.SetNext(n);
             }
-            
             last = n;
+        }
+        public T Get(int i)
+        {
+
+            if(i >= count || count<0 || head == null ) 
+            {
+                throw new IndexOutOfRangeException("");
+            }
+            Node current = head;
+            for(int _i = 0 ; _i < count; i++)
+            {
+                if(current.getThird() != null && current.getThirdN() <= i)
+                {
+                    _i = current.getThirdN();
+                    current = current.getThird();
+                }
+                if (_i == i) return current.GetValue();
+            }
+            throw new IndexOutOfRangeException();
         }
     }
     internal class Program

@@ -2,7 +2,7 @@
 {
     public class UList<T>
     {
-        Node head;
+        Node? head;
         int count = 0;
 
         class Node
@@ -11,14 +11,25 @@
             Node? next;
             Node? third;
 
-            public Node(T val, int count)
+            public Node(T val, int count, Node? head)
             {
                 this.value = val;
                 int n = (int)(count / 3);
-
+                UpdateThirds(head, n, count);
             }
 
-
+            private void UpdateThirds(Node? head, int relN, int count)
+            {
+                if (head == null) return;
+                Node? current = head;
+                for (int i = 0; i < count; i++)
+                {
+                    for (int j = 0; j < relN; j++)
+                    {
+                        
+                    }
+                }
+            }
             private Node? getRelativeNode(int relN)
             {
                 return null;

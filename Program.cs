@@ -10,6 +10,7 @@
             T value;
             Node? next;
             Node? third;
+            int thirdN;
 
             public Node(T val, int count, Node? head)
             {
@@ -22,13 +23,22 @@
             {
                 if (head == null) return;
                 Node? current = head;
-                for (int i = 0; i < count; i++)
+                for (int i = 0; i < count && current != null; i++)
                 {
+                    Node? n = current.next;
                     for (int j = 0; j < relN; j++)
                     {
-                        
+                        if (n == null) break;
+                        n = n.next;
                     }
+                    current.third = n;
+                    current.setThirdN(i + relN);
+                    current = current.next;
                 }
+            }
+            private void setThirdN(int n)
+            {
+                this.thirdN = n;
             }
             private Node? getRelativeNode(int relN)
             {
